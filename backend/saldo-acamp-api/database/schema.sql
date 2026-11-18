@@ -1,0 +1,44 @@
+
+CREATE TABLE Admins (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    senha_hash TEXT NOT NULL,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Acampantes (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    cpf VARCHAR(14) UNIQUE NOT NULL,
+    saldo BIGINT NOT NULL DEFAULT 0 CHECK (saldo >= 0),
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Itens (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    nome VARCHAR(100) NOT NULL,
+    preco_centavos BIGINT NOT NULL CHECK (preco_centavos >= 0),
+    disponivel BOOLEAN NOT NULL DEFAULT TRUE,
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE Transacoes (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+
+    acampante_id BIGINT NOT NULL
+        REFERENCES Acampantes(id),
+
+    item_id BIGINT NOT NULL
+        REFERENCES Itens(id),
+
+    admin_id BIGINT NOT NULL
+        REFERENCES Admins(id),
+
+    quantidade INTEGER NOT NULL CHECK (quantidade > 0),
+
+    preco_unitario_centavos BIGINT NOT NULL
+        CHECK (preco_unitario_centavos >= 0),
+
+    data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
