@@ -1,9 +1,10 @@
-
 CREATE TABLE Admins (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     senha_hash TEXT NOT NULL,
+    role VARCHAR(20) NOT NULL DEFAULT 'admin'
+        CHECK (role IN ('admin', 'superadmin')),
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -25,20 +26,10 @@ CREATE TABLE Itens (
 
 CREATE TABLE Transacoes (
     id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
-
-    acampante_id BIGINT NOT NULL
-        REFERENCES Acampantes(id),
-
-    item_id BIGINT NOT NULL
-        REFERENCES Itens(id),
-
-    admin_id BIGINT NOT NULL
-        REFERENCES Admins(id),
-
+    acampante_id BIGINT NOT NULL REFERENCES Acampantes(id),
+    item_id BIGINT NOT NULL REFERENCES Itens(id),
+    admin_id BIGINT NOT NULL REFERENCES Admins(id),
     quantidade INTEGER NOT NULL CHECK (quantidade > 0),
-
-    preco_unitario_centavos BIGINT NOT NULL
-        CHECK (preco_unitario_centavos >= 0),
-
+    preco_unitario_centavos BIGINT NOT NULL CHECK (preco_unitario_centavos >= 0),
     data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

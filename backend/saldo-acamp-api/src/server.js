@@ -1,11 +1,17 @@
 
 import express from 'express'
+import 'dotenv/config'
+
 import acampantesRoutes from './routes/acampantes.js'
+import adminsRoutes from './routes/admins.js'
+import authRoutes from './routes/auth.js'
 
 const app = express()
 
 app.use(express.json())
 
+app.use('/auth', authRoutes)
+app.use('/admins', adminsRoutes)
 app.use('/acampantes', acampantesRoutes)
 
 app.listen(3000, () => {

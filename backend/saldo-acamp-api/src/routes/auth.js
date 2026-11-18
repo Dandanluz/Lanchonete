@@ -1,21 +1,19 @@
-// import { Router } from 'express'
-// import pool from '../config/database.js'
 
-// const router = Router()
+import { Router } from 'express'
 
-// router.post('/auth/login', async(require, res) =>{
-//     try {
-//         const { senha } = require.body
+import {
+    login,
+    getMe
+} from '../controllers/authController.js'
 
-//         if (!senha) {
-//             return res.status(400).json({
-//                 erro: 'Informe a senha!'
-//             })
-//         } 
-        
+import authMiddleware from '../middlewares/authMiddleware.js'
 
-//     }
+const router = Router()
 
-// })
+// Login: não precisa estar autenticado
+router.post('/login', login)
 
-// export default router
+// Dados do administrador: precisa estar autenticado
+router.get('/me', authMiddleware, getMe)
+
+export default router
