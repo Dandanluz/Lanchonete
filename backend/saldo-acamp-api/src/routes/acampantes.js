@@ -1,40 +1,33 @@
 import { Router } from 'express'
-import pool from '../config/database.js'
 
-const router = Router()
+import {
+    consultarSaldo,
+    listAcampantes,
+    consultarAcampante,
+    cadastrarAcampante,
+    updateAcampante,
+    deleteAcampante,
+    adicionarSaldo
+} from '../controllers/acampantesController.js'
 
-router.post('/consultar', async (req, res) => {
-    try {
-        const { cpf } = req.body
+import authMiddleware from '../middlewares/authMiddleware.js'
+import roleMiddleware from '../middlewares/roleMiddleware.js'
 
-        if (!cpf) {
-            return res.status(400).json({
-                erro: 'Informe o CPF'
-            })
-        }
 
-        const resultado = await pool.query(
-            `SELECT nome, saldo
-             FROM Acampantes
-             WHERE cpf = $1`,
-            [cpf]
-        )
+const routerAcampantes = Router()
 
-        if (resultado.rowCount === 0) {
-            return res.status(404).json({
-                erro: 'Acampante não encontrado'
-            })
-        }
+routerAcampantes.post('/consultar', consultarSaldo)
 
-        return res.json(resultado.rows[0])
+routerAcampantes.get('/', listAcampantes)
 
-    } catch (error) {
-        console.error(error)
+routerAcampantes.get('/:id', consultarAcampante)
 
-        return res.status(500).json({
-            erro: 'Erro ao consultar saldo'
-        })
-    }
-})
+routerAcampantes.post('/', cadastrarAcampante)
 
-export default router
+routerAcampantes.put('/:id', updateAcampante)
+
+routerAcampantes.delete('/:id', deleteAcampante)
+
+routerAcampantes.put('/:id', adicionarSaldo)
+
+export default routerAcampantes

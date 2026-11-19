@@ -10,19 +10,19 @@ import {
 
 import authMiddleware from '../middlewares/authMiddleware.js'
 
-const router = Router()
+const routerAdmins = Router()
 
 // Todas as rotas abaixo exigem autenticação
-router.use(authMiddleware)
+routerAdmins.use(authMiddleware)
 
-router.get('/', listAdmins)
+routerAdmins.get('/', listAdmins)
 
-router.get('/:id', getAdmin)
+routerAdmins.get('/:id', getAdmin)
 
-router.post('/', createAdmin)
+routerAdmins.post('/', createAdmin)
 
-router.put('/:id', updateAdmin)
+routerAdmins.put('/:id', updateAdmin)
 
-router.delete('/:id', deleteAdmin)
+routerAdmins.delete('/:id', deleteAdmin)
 
-export default router
+export default routerAdmins
