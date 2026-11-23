@@ -29,6 +29,6 @@ routerAcampantes.put('/:id', updateAcampante)
 
 routerAcampantes.delete('/:id', deleteAcampante)
 
-routerAcampantes.put('/:id', adicionarSaldo)
+routerAcampantes.patch('/:id/saldo', adicionarSaldo)
 
 export default routerAcampantes

@@ -47,13 +47,21 @@ export default async function authMiddleware(req, res, next) {
         return next()
 
     } catch (error) {
-        if (
-            error.name === 'JsonWebTokenError' ||
-            error.name === 'TokenExpiredError' ||
-            error.name === 'NotBeforeError'
-        ) {
+        if (error.name === 'TokenExpiredError') {
             return res.status(401).json({
-                erro: 'Token inválido ou expirado'
+                erro: 'Token expirado'
+            })
+            }
+
+            if (error.name === 'JsonWebTokenError') {
+            return res.status(401).json({
+                erro: 'Token inválido'
+            })
+            }
+
+            if (error.name === 'NotBeforeError') {
+            return res.status(401).json({
+                erro: 'Token ainda não é válido'
             })
         }
 
