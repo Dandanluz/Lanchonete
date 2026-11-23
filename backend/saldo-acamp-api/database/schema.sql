@@ -3,8 +3,6 @@ CREATE TABLE Admins (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     senha_hash TEXT NOT NULL,
-    role VARCHAR(20) NOT NULL DEFAULT 'admin'
-        CHECK (role IN ('admin', 'superadmin')),
     criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

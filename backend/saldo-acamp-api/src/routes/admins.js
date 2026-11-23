@@ -12,7 +12,6 @@ import authMiddleware from '../middlewares/authMiddleware.js'
 
 const routerAdmins = Router()
 
-// Todas as rotas abaixo exigem autenticação
 routerAdmins.use(authMiddleware)
 
 routerAdmins.get('/', listAdmins)

@@ -1,4 +1,3 @@
-
 import { Router } from 'express'
 
 import {
@@ -11,22 +10,21 @@ import {
 } from '../controllers/itensController.js'
 
 import authMiddleware from '../middlewares/authMiddleware.js'
-import roleMiddleware from '../middlewares/roleMiddleware.js'
 
-const router = Router()
+const itensRoutes = Router()
 
-// Rotas públicas
-router.get('/', listItens)
 
-// Rotas administrativas
-router.get('/admin', authMiddleware, roleMiddleware('admin', 'superadmin'), listTodosItens)
+itensRoutes.get('/', listItens)
 
-router.post('/', authMiddleware, roleMiddleware('admin', 'superadmin'), cadastrarItem)
+itensRoutes.get('/admin', listTodosItens)
 
-router.put('/:id', authMiddleware, roleMiddleware('admin', 'superadmin'), updateItem)
+itensRoutes.use(authMiddleware)
+itensRoutes.post('/', cadastrarItem)
 
-router.patch('/:id/disponibilidade', authMiddleware, roleMiddleware('admin', 'superadmin'), atualizarDisponibilidade)
+itensRoutes.put('/:id', updateItem)
 
-router.delete('/:id', authMiddleware, roleMiddleware('admin', 'superadmin'), deleteItem)
+itensRoutes.patch('/:id/disponibilidade', atualizarDisponibilidade)
 
-export default router
+itensRoutes.delete('/:id', deleteItem)
+
+export default itensRoutes

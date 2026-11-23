@@ -11,10 +11,11 @@ import {
 } from '../controllers/acampantesController.js'
 
 import authMiddleware from '../middlewares/authMiddleware.js'
-import roleMiddleware from '../middlewares/roleMiddleware.js'
 
 
 const routerAcampantes = Router()
+
+routerAcampantes.use(authMiddleware)
 
 routerAcampantes.post('/consultar', consultarSaldo)
 
