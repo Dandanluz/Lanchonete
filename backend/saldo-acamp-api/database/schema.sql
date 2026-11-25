@@ -3,7 +3,7 @@ CREATE TABLE Admins (
     nome VARCHAR(100) NOT NULL,
     email VARCHAR(150) UNIQUE NOT NULL,
     senha_hash TEXT NOT NULL,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMPTZ
 );
 
 CREATE TABLE Acampantes (
@@ -11,7 +11,7 @@ CREATE TABLE Acampantes (
     nome VARCHAR(100) NOT NULL,
     cpf VARCHAR(14) UNIQUE NOT NULL,
     saldo BIGINT NOT NULL DEFAULT 0 CHECK (saldo >= 0),
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMPTZ
 );
 
 CREATE TABLE Itens (
@@ -19,7 +19,7 @@ CREATE TABLE Itens (
     nome VARCHAR(100) NOT NULL,
     preco_centavos BIGINT NOT NULL CHECK (preco_centavos >= 0),
     disponivel BOOLEAN NOT NULL DEFAULT TRUE,
-    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    criado_em TIMESTAMP DEFAULT CURRENT_TIMESTAMPTZ
 );
 
 CREATE TABLE Transacoes (
@@ -29,5 +29,9 @@ CREATE TABLE Transacoes (
     admin_id BIGINT NOT NULL REFERENCES Admins(id),
     quantidade INTEGER NOT NULL CHECK (quantidade > 0),
     preco_unitario_centavos BIGINT NOT NULL CHECK (preco_unitario_centavos >= 0),
-    data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    data_transacao TIMESTAMP DEFAULT CURRENT_TIMESTAMPTZ
 );
+
+CREATE INDEX idx_transacoes_acampante ON Transacoes(acampante_id);
+CREATE INDEX idx_transacoes_item ON Transacoes(item_id);
+CREATE INDEX idx_transacoes_data ON Transacoes(data_transacao DESC);

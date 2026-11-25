@@ -16,9 +16,10 @@ const itensRoutes = Router()
 
 itensRoutes.get('/', listItens)
 
+itensRoutes.use(authMiddleware)
+
 itensRoutes.get('/admin', listTodosItens)
 
-itensRoutes.use(authMiddleware)
 itensRoutes.post('/', cadastrarItem)
 
 itensRoutes.put('/:id', updateItem)

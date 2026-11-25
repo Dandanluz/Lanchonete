@@ -5,7 +5,6 @@ import {
     listAcampantes,
     consultarAcampante,
     cadastrarAcampante,
-    updateAcampante,
     deleteAcampante,
     adicionarSaldo
 } from '../controllers/acampantesController.js'
@@ -24,8 +23,6 @@ routerAcampantes.get('/', listAcampantes)
 routerAcampantes.get('/:id', consultarAcampante)
 
 routerAcampantes.post('/', cadastrarAcampante)
-
-routerAcampantes.put('/:id', updateAcampante)
 
 routerAcampantes.delete('/:id', deleteAcampante)
 

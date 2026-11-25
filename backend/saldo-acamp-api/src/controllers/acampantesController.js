@@ -80,13 +80,14 @@ export async function consultarAcampante(req, res) {
 
 export async function cadastrarAcampante(req, res) {
     try {
-        const { nome, cpf, saldo } = req.body
+        const { nome, cpf } = req.body
+        const saldo = req.body.saldo ?? 0
 
-        if (!nome || !cpf || !saldo) {
-            return res.status(400).json({
-                erro: 'Preencha todos os campos'
-            })
+        if (!nome?.trim() || !cpf || !Number.isSafeInteger(saldo) || saldo < 0) {
+            return res.status(400).json({ erro: 'Informe nome, cpf e saldo válido em centavos' })
         }
+        const verificarcpf = String(req.body.cpf ?? '').replace(/\D/g, '')
+        if (verificarcpf.length !== 11) return res.status(400).json({ erro: 'CPF inválido' })
 
         const result = await pool.query(
             `INSERT INTO Acampantes (nome, cpf, saldo)
@@ -112,35 +113,6 @@ export async function cadastrarAcampante(req, res) {
     }
 }
 
-export async function updateAcampante(req, res) {
-    try {
-        const { id } = req.params
-        const { nome, saldo } = req.body
-
-        const result = await pool.query(
-            `UPDATE Acampantes
-             SET nome = COALESCE($1, nome),
-                 saldo = COALESCE($2, saldo)
-             WHERE id = $3
-             RETURNING id, nome, saldo`,
-            [nome ?? null, saldo ?? null, id]
-        )
-
-        if (result.rowCount === 0) {
-            return res.status(404).json({
-                erro: 'Acampante não encontrado'
-            })
-        }
-
-        return res.json(result.rows[0])
-
-    } catch (error) {
-        console.error(error)
-        return res.status(500).json({
-            erro: 'Erro ao atualizar acampante'
-        })
-    }
-}
 
 export async function deleteAcampante(req, res) {
     try {

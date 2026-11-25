@@ -29,7 +29,7 @@ export default async function authMiddleware(req, res, next) {
 
         // Busca o administrador atualizado no banco
         const resultado = await pool.query(
-            `SELECT id, nome, email, role
+            `SELECT id, nome, email
              FROM Admins
              WHERE id = $1`,
             [decoded.id]

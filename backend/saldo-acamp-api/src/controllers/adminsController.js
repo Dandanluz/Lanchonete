@@ -52,8 +52,9 @@ export async function getAdmin(req, res) {
 export async function createAdmin(req, res) {
     try {
         const { nome, email, senha } = req.body
+        const emailNormalizado = email.trim().toLowerCase()
 
-        if (!nome || !email || !senha) {
+        if (!nome || !emailNormalizado || !senha) {
             return res.status(400).json({
                 erro: 'Preencha todos os campos'
             })
@@ -65,7 +66,7 @@ export async function createAdmin(req, res) {
             `INSERT INTO Admins (nome, email, senha_hash)
              VALUES ($1, $2, $3)
              RETURNING id, nome, email`,
-            [nome, email, senha_hash]
+            [nome, emailNormalizado, senha_hash]
         )
 
         return res.status(201).json(result.rows[0])
@@ -90,6 +91,7 @@ export async function updateAdmin(req, res) {
     try {
         const { id } = req.params
         const { nome, email } = req.body
+        const emailNormalizado = email.trim().toLowerCase()
 
         const result = await pool.query(
             `UPDATE Admins
@@ -97,7 +99,7 @@ export async function updateAdmin(req, res) {
                  email = COALESCE($2, email)
              WHERE id = $3
              RETURNING id, nome, email`,
-            [nome ?? null, email ?? null, id]
+            [nome ?? null, emailNormalizado ?? null, id]
         )
 
         if (result.rowCount === 0) {

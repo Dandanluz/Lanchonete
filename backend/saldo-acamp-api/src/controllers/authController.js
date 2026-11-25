@@ -16,7 +16,7 @@ export async function login(req, res) {
 
         // Busca o administrador pelo email
         const resultado = await pool.query(
-            `SELECT id, nome, email, senha_hash, role
+            `SELECT id, nome, email, senha_hash
              FROM Admins
              WHERE email = $1`,
             [email.trim().toLowerCase()]
@@ -55,8 +55,7 @@ export async function login(req, res) {
             administrador: {
                 id: admin.id,
                 nome: admin.nome,
-                email: admin.email,
-                role: admin.role
+                email: admin.email
             },
             token
         })
