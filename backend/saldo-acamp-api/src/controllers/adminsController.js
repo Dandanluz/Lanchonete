@@ -52,14 +52,14 @@ export async function getAdmin(req, res) {
 export async function createAdmin(req, res) {
     try {
         const { nome, email, senha } = req.body
-        const emailNormalizado = email.trim().toLowerCase()
 
-        if (!nome || !emailNormalizado || !senha) {
+        if (!nome || typeof email !== 'string' || !email.trim() || !senha) {
             return res.status(400).json({
                 erro: 'Preencha todos os campos'
             })
         }
 
+        const emailNormalizado = email.trim().toLowerCase()
         const senha_hash = await bcrypt.hash(senha, 12)
 
         const result = await pool.query(
@@ -91,7 +91,8 @@ export async function updateAdmin(req, res) {
     try {
         const { id } = req.params
         const { nome, email } = req.body
-        const emailNormalizado = email.trim().toLowerCase()
+        const emailNormalizado =
+            typeof email === 'string' ? email.trim().toLowerCase() : null
 
         const result = await pool.query(
             `UPDATE Admins
@@ -99,7 +100,7 @@ export async function updateAdmin(req, res) {
                  email = COALESCE($2, email)
              WHERE id = $3
              RETURNING id, nome, email`,
-            [nome ?? null, emailNormalizado ?? null, id]
+            [nome ?? null, emailNormalizado, id]
         )
 
         if (result.rowCount === 0) {

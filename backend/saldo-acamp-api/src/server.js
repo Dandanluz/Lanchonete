@@ -7,6 +7,11 @@ import authRoutes from './routes/auth.js'
 import itensRoutes from './routes/itens.js'
 import transacoesRoutes from './routes/transacoes.js'
 
+if (!process.env.JWT_SECRET) {
+    console.error('JWT_SECRET não definido no .env')
+    process.exit(1)
+}
+
 const app = express()
 
 app.use(express.json())
@@ -20,6 +25,8 @@ app.use('/acampantes', acampantesRoutes)
 app.use('/itens', itensRoutes)
 app.use('/transacoes', transacoesRoutes)
 
-app.listen(3000, () => {
-    console.log('Servidor rodando na porta 3000')
+const PORT = process.env.PORT || 3000
+
+app.listen(PORT, () => {
+    console.log(`Servidor rodando na porta ${PORT}`)
 })

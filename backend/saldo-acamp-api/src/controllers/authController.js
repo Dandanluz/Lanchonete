@@ -2,13 +2,17 @@ import pool from '../config/database.js'
 import bcrypt from 'bcrypt'
 import jwt from 'jsonwebtoken'
 
+// Hash falso usado quando o email não existe, para que o tempo de resposta
+// seja parecido com o de um email existente (evita descobrir emails cadastrados)
+const HASH_FALSO = await bcrypt.hash('senha-falsa', 12)
+
 // POST /auth/login
 export async function login(req, res) {
     try {
         const { email, senha } = req.body
 
         // Verifica se os campos foram preenchidos
-        if (!email || !senha) {
+        if (typeof email !== 'string' || typeof senha !== 'string' || !email.trim() || !senha) {
             return res.status(400).json({
                 erro: 'Informe email e senha'
             })
@@ -22,21 +26,16 @@ export async function login(req, res) {
             [email.trim().toLowerCase()]
         )
 
-        if (resultado.rowCount === 0) {
-            return res.status(401).json({
-                erro: 'Email ou senha incorretos'
-            })
-        }
-
         const admin = resultado.rows[0]
 
         // Compara a senha informada com o hash do banco
+        // (se o admin não existir, compara com o hash falso)
         const senhaValida = await bcrypt.compare(
             senha,
-            admin.senha_hash
+            admin ? admin.senha_hash : HASH_FALSO
         )
 
-        if (!senhaValida) {
+        if (!admin || !senhaValida) {
             return res.status(401).json({
                 erro: 'Email ou senha incorretos'
             })
@@ -46,7 +45,7 @@ export async function login(req, res) {
         const token = jwt.sign(
             { id: admin.id },
             process.env.JWT_SECRET,
-            { expiresIn: '8h' }
+            { expiresIn: process.env.JWT_EXPIRES_IN || '8h', algorithm: 'HS256' }
         )
 
         // Não retorna o hash da senha

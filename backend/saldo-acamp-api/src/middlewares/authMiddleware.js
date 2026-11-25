@@ -24,7 +24,8 @@ export default async function authMiddleware(req, res, next) {
         // Verifica se o JWT é válido
         const decoded = jwt.verify(
             token,
-            process.env.JWT_SECRET
+            process.env.JWT_SECRET,
+            { algorithms: ['HS256'] }
         )
 
         // Busca o administrador atualizado no banco
@@ -51,15 +52,15 @@ export default async function authMiddleware(req, res, next) {
             return res.status(401).json({
                 erro: 'Token expirado'
             })
-            }
+        }
 
-            if (error.name === 'JsonWebTokenError') {
+        if (error.name === 'JsonWebTokenError') {
             return res.status(401).json({
                 erro: 'Token inválido'
             })
-            }
+        }
 
-            if (error.name === 'NotBeforeError') {
+        if (error.name === 'NotBeforeError') {
             return res.status(401).json({
                 erro: 'Token ainda não é válido'
             })
