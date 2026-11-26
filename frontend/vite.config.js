@@ -2,17 +2,17 @@ import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 import tailwindcss from '@tailwindcss/vite'
 
-// Em desenvolvimento, tudo que começa com /api é repassado para o Express.
-// Assim o navegador fala só com o Vite (mesma origem) e não precisa de CORS.
+const proxy = {
+  '/api': {
+    target: process.env.API_URL || 'http://localhost:3000',
+    changeOrigin: true,
+    // Se o Express AINDA NÃO monta as rotas em /api, descomente:
+    // rewrite: (path) => path.replace(/^\/api/, ''),
+  },
+}
+
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  server: {
-    proxy: {
-      '/api': {
-        target: 'http://localhost:3000', // troque se sua API usa outra porta (PORT no .env)
-        changeOrigin: true,
-        rewrite: (path) => path.replace(/^\/api/, ''),
-      },
-    },
-  },
+  server: { proxy },
+  preview: { proxy },
 })
