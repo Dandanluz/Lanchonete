@@ -182,6 +182,7 @@ export async function historicoAcampante(req, res) {
         const result = await pool.query(
             `SELECT
                 t.id,
+                a.nome AS acampante,
                 i.nome AS item,
                 ad.nome AS administrador,
                 t.quantidade,
@@ -189,6 +190,7 @@ export async function historicoAcampante(req, res) {
                 t.quantidade * t.preco_unitario_centavos AS total_centavos,
                 t.data_transacao
              FROM Transacoes t
+             INNER JOIN Acampantes a ON a.id = t.acampante_id
              INNER JOIN Itens i ON i.id = t.item_id
              INNER JOIN Admins ad ON ad.id = t.admin_id
              WHERE t.acampante_id = $1
