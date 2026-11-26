@@ -23,7 +23,7 @@ function Linha({ a, aoAtualizar, aoErro }) {
     <li className="flex flex-col gap-2 py-3 sm:flex-row sm:items-center sm:justify-between">
       <div>
         <p className="font-semibold">{a.nome}</p>
-        <p className="text-sm text-tinta-suave">{a.cpf}</p>
+        <p className="text-sm text-tinta-suave">{mascaraCpf(a.cpf)}</p>
       </div>
       <div className="flex items-center gap-3">
         <span className="w-28 text-right text-lg font-bold tabular-nums">{brl(a.saldo)}</span>
