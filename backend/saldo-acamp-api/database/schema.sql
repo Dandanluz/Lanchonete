@@ -35,3 +35,16 @@ CREATE TABLE Transacoes (
 CREATE INDEX idx_transacoes_acampante ON Transacoes(acampante_id);
 CREATE INDEX idx_transacoes_item ON Transacoes(item_id);
 CREATE INDEX idx_transacoes_data ON Transacoes(data_transacao DESC);
+
+CREATE TABLE IF NOT EXISTS RefreshTokens (
+    id BIGINT GENERATED ALWAYS AS IDENTITY PRIMARY KEY,
+    admin_id BIGINT NOT NULL REFERENCES Admins(id) ON DELETE CASCADE,
+    token_hash CHAR(64) UNIQUE NOT NULL,
+    familia UUID NOT NULL,
+    expira_em TIMESTAMPTZ NOT NULL,
+    revogado_em TIMESTAMPTZ,
+    criado_em TIMESTAMPTZ DEFAULT NOW()
+);
+
+CREATE INDEX IF NOT EXISTS idx_refresh_admin ON RefreshTokens(admin_id);
+CREATE INDEX IF NOT EXISTS idx_refresh_familia ON RefreshTokens(familia);
